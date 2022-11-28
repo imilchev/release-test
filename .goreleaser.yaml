@@ -1,0 +1,207 @@
+---
+project_name: release-test
+env:
+  - CGO_ENABLED=0
+builds:
+  - id: linux
+    main: ./main.go
+    binary: release-test
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - 386
+      - arm64
+      - arm
+      - ppc64le
+    # ARM 6= Raspberry Pi A, A+, B, B+, Zero
+    # ARM 7= Raspberry Pi 2, 3, 4
+    goarm:
+      - 6
+      - 7
+    flags:
+      - -tags="production netgo"
+    ldflags:
+      - "-extldflags=-static"
+archives:
+  - id: releases
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - none*
+checksum:
+  name_template: '{{ .ProjectName }}_v{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
+snapshot:
+  name_template: "{{ .Tag }}-snapshot"
+changelog:
+  use: github-native
+dockers: # https://goreleaser.com/customization/docker/
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-amd64"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-amd64"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=root"
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-arm64v8"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-arm64v8"
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=root"
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: arm
+    goarm: 6
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv6"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv6"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv6"
+    build_flag_templates:
+      - "--platform=linux/arm/v6"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=root"
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: arm
+    goarm: 7
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv7"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv7"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv7"
+    build_flag_templates:
+      - "--platform=linux/arm/v7"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=root"
+  # Rootless
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-amd64-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-amd64-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-amd64-rootless"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=rootless"
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-arm64v8-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-arm64v8-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-arm64v8-rootless"
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=rootless"
+  - use: buildx
+    goos: linux
+    goarch: arm
+    goarm: 6
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv6-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv6-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv6-rootless"
+    build_flag_templates:
+      - "--platform=linux/arm/v6"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=rootless"
+  - use: buildx
+    skip_push: false
+    goos: linux
+    goarch: arm
+    goarm: 7
+    image_templates:
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv7-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv7-rootless"
+      - "ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv7-rootless"
+    build_flag_templates:
+      - "--platform=linux/arm/v7"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--target=rootless"
+docker_manifests:  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}
+    skip_push: false
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-arm64v8
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv6
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}
+    skip_push: false
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-amd64
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-arm64v8
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv6
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv7
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-amd64
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-arm64v8
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv6
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv7
+  # Rootless
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-rootless
+    skip_push: false
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-amd64-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-arm64v8-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv6-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-armv7-rootless
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-rootless
+    skip_push: false
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-amd64-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-arm64v8-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv6-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}-armv7-rootless
+  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-rootless
+    skip_push: false
+    image_templates:
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-amd64-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-arm64v8-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv6-rootless
+      - ghcr.io/imilchev/release-test/{{ .ProjectName }}:latest-armv7-rootless
