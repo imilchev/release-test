@@ -170,7 +170,7 @@ docker_manifests:  # https://goreleaser.com/customization/docker_manifest/
       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-arm64v8
       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv6
       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv7
-  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Major }}
+  - name_template: ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}
     skip_push: false
     image_templates:
       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-amd64
