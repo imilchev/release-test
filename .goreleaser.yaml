@@ -2,7 +2,6 @@
 project_name: release-test
 release:
   disable: true
-  skip_upload: true
 env:
   - CGO_ENABLED=0
 builds:
@@ -39,6 +38,7 @@ checksum:
 snapshot:
   name_template: "{{ .Tag }}-snapshot"
 changelog:
+  skip: true
   use: github-native
 dockers: # https://goreleaser.com/customization/docker/
   - use: buildx
