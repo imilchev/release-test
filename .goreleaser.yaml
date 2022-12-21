@@ -37,7 +37,7 @@ snapshot:
   name_template: "{{ .Tag }}-snapshot"
 changelog:
   use: github-native
-# dockers: # https://goreleaser.com/customization/docker/
+dockers: # https://goreleaser.com/customization/docker/
   - use: buildx
     skip_push: false
     goos: linux
