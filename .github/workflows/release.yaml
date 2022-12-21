@@ -37,6 +37,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Test tag
         run: git tag 0.1.0
+      - name: Update .goreleaser.yaml
+        run: |
+          yq -i ".release.disable = true" .goreleaser.yaml
+          yq -i ".changelog.skip = true" .goreleaser.yaml
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3
         with:
