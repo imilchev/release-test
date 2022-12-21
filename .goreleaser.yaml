@@ -1,5 +1,7 @@
 ---
 project_name: release-test
+release:
+  disable: true
 env:
   - CGO_ENABLED=0
 builds:
