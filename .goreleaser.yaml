@@ -37,7 +37,7 @@ snapshot:
   name_template: "{{ .Tag }}-snapshot"
 changelog:
   use: github-native
-dockers: # https://goreleaser.com/customization/docker/
+# dockers: # https://goreleaser.com/customization/docker/
   - use: buildx
     skip_push: false
     goos: linux
@@ -162,27 +162,27 @@ dockers: # https://goreleaser.com/customization/docker/
   #     - "--label=org.opencontainers.image.revision={{.FullCommit}}"
   #     - "--label=org.opencontainers.image.version={{.Version}}"
   #     - "--target=rootless"
-docker_manifests:  # https://goreleaser.com/customization/docker_manifest/
-  - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}
-    skip_push: false
-    image_templates:
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-amd64
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-arm64v8
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv6
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv7
-  - name_template: ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}
-    skip_push: false
-    image_templates:
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-amd64
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-arm64v8
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-armv6
-      - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-armv7
-  - name_template: ghcr.io/imilchev/{{ .ProjectName }}:latest
-    image_templates:
-      - ghcr.io/imilchev/{{ .ProjectName }}:latest-amd64
-      - ghcr.io/imilchev/{{ .ProjectName }}:latest-arm64v8
-      - ghcr.io/imilchev/{{ .ProjectName }}:latest-armv6
-      - ghcr.io/imilchev/{{ .ProjectName }}:latest-armv7
+# docker_manifests:  # https://goreleaser.com/customization/docker_manifest/
+#   - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}
+#     skip_push: false
+#     image_templates:
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-amd64
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-arm64v8
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv6
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Version }}-armv7
+#   - name_template: ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}
+#     skip_push: false
+#     image_templates:
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-amd64
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-arm64v8
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-armv6
+#       - ghcr.io/imilchev/{{ .ProjectName }}:{{ .Major }}-armv7
+#   - name_template: ghcr.io/imilchev/{{ .ProjectName }}:latest
+#     image_templates:
+#       - ghcr.io/imilchev/{{ .ProjectName }}:latest-amd64
+#       - ghcr.io/imilchev/{{ .ProjectName }}:latest-arm64v8
+#       - ghcr.io/imilchev/{{ .ProjectName }}:latest-armv6
+#       - ghcr.io/imilchev/{{ .ProjectName }}:latest-armv7
   # Rootless
   # - name_template: ghcr.io/imilchev/release-test/{{ .ProjectName }}:{{ .Version }}-rootless
   #   skip_push: false
